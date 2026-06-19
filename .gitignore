@@ -1,0 +1,11 @@
+node_modules/
+client/node_modules/
+client/dist/
+.env
+.env.local
+.env.production
+/data/
+*.log
+npm-debug.log*
+.DS_Store
+Thumbs.db
