@@ -36,6 +36,9 @@ app.use(cookieParser());
 // Serve uploaded files statically
 app.use('/uploads', express.static(UPLOAD_DIR));
 
+// Health check (no auth required)
+app.get('/api/health', (req, res) => res.json({ status: 'ok' }));
+
 // API routes
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/vendors', require('./routes/vendors'));
