@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import Navbar from '../components/Navbar.jsx';
-import { getProjects, getPlans, uploadPlans, deletePlan, downloadPlanUrl } from '../api.js';
+import { getProjects, getPlans, uploadPlans, deletePlan, downloadPlanUrl, createProject } from '../api.js';
 
 function fmtSize(bytes) {
   if (!bytes) return '—';
@@ -15,6 +15,9 @@ export default function Plans() {
   const [plans, setPlans] = useState([]);
   const [revision, setRevision] = useState('');
   const [label, setLabel] = useState('');
+  const [showNewProject, setShowNewProject] = useState(false);
+  const [newProjectName, setNewProjectName] = useState('');
+  const [newProjectDesc, setNewProjectDesc] = useState('');
   const [dragging, setDragging] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [uploadError, setUploadError] = useState('');
@@ -59,6 +62,17 @@ export default function Plans() {
     }
   };
 
+  const handleCreateProject = async () => {
+    if (!newProjectName.trim()) return;
+    const r = await createProject({ name: newProjectName.trim(), description: newProjectDesc.trim() });
+    const updated = await getProjects();
+    setProjects(updated.data);
+    setSelectedProject(String(r.data.id));
+    setNewProjectName('');
+    setNewProjectDesc('');
+    setShowNewProject(false);
+  };
+
   const handleDelete = async (id) => {
     if (!confirm('Delete this file?')) return;
     await deletePlan(id);
@@ -85,15 +99,54 @@ export default function Plans() {
         {/* Project Selector */}
         <div style={{ marginBottom: 24 }}>
           <label style={{ fontSize: 13, color: '#64748b', fontWeight: 500, display: 'block', marginBottom: 6 }}>Project</label>
-          <select
-            value={selectedProject}
-            onChange={(e) => setSelectedProject(e.target.value)}
-            style={{ padding: '9px 14px', border: '1px solid #d1d5db', borderRadius: 8, fontSize: 14, minWidth: 280 }}
-          >
-            <option value="">— Select a project —</option>
-            {projects.map((p) => <option key={p.id} value={String(p.id)}>{p.name}</option>)}
-          </select>
+          <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
+            <select
+              value={selectedProject}
+              onChange={(e) => setSelectedProject(e.target.value)}
+              style={{ padding: '9px 14px', border: '1px solid #d1d5db', borderRadius: 8, fontSize: 14, minWidth: 280 }}
+            >
+              <option value="">— Select a project —</option>
+              {projects.map((p) => <option key={p.id} value={String(p.id)}>{p.name}</option>)}
+            </select>
+            <button
+              onClick={() => setShowNewProject(true)}
+              style={{ padding: '9px 16px', background: '#f97316', color: '#fff', border: 'none', borderRadius: 8, fontSize: 14, fontWeight: 600, cursor: 'pointer' }}
+            >+ New Project</button>
+          </div>
         </div>
+
+        {/* New Project Modal */}
+        {showNewProject && (
+          <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }}>
+            <div style={{ background: '#fff', borderRadius: 12, padding: 32, width: 440, boxShadow: '0 8px 32px rgba(0,0,0,0.2)' }}>
+              <h2 style={{ fontSize: 20, fontWeight: 700, color: '#0f172a', marginBottom: 20 }}>New Project</h2>
+              <div style={{ marginBottom: 16 }}>
+                <label style={{ fontSize: 13, color: '#64748b', fontWeight: 500, display: 'block', marginBottom: 6 }}>Project Name *</label>
+                <input
+                  autoFocus
+                  value={newProjectName}
+                  onChange={(e) => setNewProjectName(e.target.value)}
+                  onKeyDown={(e) => e.key === 'Enter' && handleCreateProject()}
+                  placeholder="e.g. Lot 12 — Smith Residence"
+                  style={{ width: '100%', padding: '9px 12px', border: '1px solid #d1d5db', borderRadius: 8, fontSize: 14, boxSizing: 'border-box' }}
+                />
+              </div>
+              <div style={{ marginBottom: 24 }}>
+                <label style={{ fontSize: 13, color: '#64748b', fontWeight: 500, display: 'block', marginBottom: 6 }}>Description (optional)</label>
+                <input
+                  value={newProjectDesc}
+                  onChange={(e) => setNewProjectDesc(e.target.value)}
+                  placeholder="Brief description"
+                  style={{ width: '100%', padding: '9px 12px', border: '1px solid #d1d5db', borderRadius: 8, fontSize: 14, boxSizing: 'border-box' }}
+                />
+              </div>
+              <div style={{ display: 'flex', gap: 10, justifyContent: 'flex-end' }}>
+                <button onClick={() => setShowNewProject(false)} style={{ padding: '9px 18px', border: '1px solid #d1d5db', background: '#fff', borderRadius: 8, fontSize: 14, cursor: 'pointer' }}>Cancel</button>
+                <button onClick={handleCreateProject} style={{ padding: '9px 18px', background: '#f97316', color: '#fff', border: 'none', borderRadius: 8, fontSize: 14, fontWeight: 600, cursor: 'pointer' }}>Create Project</button>
+              </div>
+            </div>
+          </div>
+        )}
 
         {selectedProject && (
           <>
