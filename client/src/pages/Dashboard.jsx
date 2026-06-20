@@ -2,8 +2,6 @@ import React, { useEffect, useState } from 'react';
 import Navbar from '../components/Navbar.jsx';
 import { getProjects, getVendors, getTracker } from '../api.js';
 
-const BUILD_VERSION = 'v1.1';
-
 const card = (label, value, color = '#f97316') => (
   <div key={label} style={{
     background: '#fff',
@@ -74,7 +72,7 @@ export default function Dashboard() {
     <div style={{ minHeight: '100vh', background: '#f8fafc' }}>
       <Navbar />
       <div style={{ maxWidth: 1200, margin: '0 auto', padding: '32px 24px' }}>
-        <h1 style={{ fontSize: 26, fontWeight: 800, color: '#0f172a', marginBottom: 24 }}>Dashboard <span style={{ fontSize: 13, color: '#94a3b8', fontWeight: 400 }}>{BUILD_VERSION}</span></h1>
+        <h1 style={{ fontSize: 26, fontWeight: 800, color: '#0f172a', marginBottom: 24 }}>Dashboard</h1>
 
         {loading ? (
           <p style={{ color: '#64748b' }}>Loading...</p>
