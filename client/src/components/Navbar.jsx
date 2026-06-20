@@ -9,6 +9,7 @@ const navItems = [
   { to: '/plans', label: 'Plans' },
   { to: '/distribute', label: 'Distribute' },
   { to: '/tracker', label: 'Tracker' },
+  { to: '/intelligence', label: 'Bid Intelligence' },
 ];
 
 export default function Navbar() {

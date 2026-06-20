@@ -38,4 +38,26 @@ export const getTracker = (params) => api.get('/tracker', { params });
 export const updateTracker = (distribution_id, data) => api.put(`/tracker/${distribution_id}`, data);
 export const exportTrackerUrl = () => `/api/tracker/export`;
 
+// Intelligence
+export const uploadPlanForExtraction = (formData) =>
+  api.post('/intelligence/plans/upload', formData, { headers: { 'Content-Type': 'multipart/form-data' } });
+export const confirmPlanSpecs = (id, data) => api.put(`/intelligence/plans/${id}/confirm`, data);
+export const getPlanSpecs = (project_id) => api.get(`/intelligence/plans/${project_id}`);
+
+export const uploadBidForNormalization = (formData) =>
+  api.post('/intelligence/bids/upload', formData, { headers: { 'Content-Type': 'multipart/form-data' } });
+export const confirmBid = (id, data) => api.put(`/intelligence/bids/${id}/confirm`, data);
+export const getBidSummaries = (project_id) => api.get(`/intelligence/bids/${project_id}`);
+export const getBidLineItems = (bid_document_id) => api.get(`/intelligence/bids/items/${bid_document_id}`);
+
+export const buildPricingModel = (notes) => api.post('/intelligence/model/build', { notes });
+export const getBaselineEstimate = (projectId) => api.get(`/intelligence/model/estimate/${projectId}`);
+export const getModelHistory = () => api.get('/intelligence/model/history');
+
+export const compareBidToBaseline = (projectId, bidDocumentId) =>
+  api.post(`/intelligence/compare/${projectId}/${bidDocumentId}`);
+export const getComparisons = (projectId) => api.get(`/intelligence/comparisons/${projectId}`);
+
+export const getReviewQueue = () => api.get('/intelligence/queue');
+
 export default api;

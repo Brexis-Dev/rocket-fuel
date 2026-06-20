@@ -46,6 +46,7 @@ app.use('/api/projects', require('./routes/projects'));
 app.use('/api/plans', require('./routes/plans'));
 app.use('/api/distributions', require('./routes/distributions'));
 app.use('/api/tracker', require('./routes/tracker'));
+app.use('/api/intelligence', require('./routes/intelligence'));
 
 // Serve React build in production
 const clientDist = path.join(__dirname, '../client/dist');

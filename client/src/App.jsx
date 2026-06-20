@@ -7,6 +7,7 @@ import Vendors from './pages/Vendors.jsx';
 import Plans from './pages/Plans.jsx';
 import Distribute from './pages/Distribute.jsx';
 import Tracker from './pages/Tracker.jsx';
+import BidIntelligence from './pages/BidIntelligence.jsx';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
 
 export const AuthContext = createContext(null);
@@ -41,6 +42,7 @@ export default function App() {
           <Route path="/plans" element={<ProtectedRoute><Plans /></ProtectedRoute>} />
           <Route path="/distribute" element={<ProtectedRoute><Distribute /></ProtectedRoute>} />
           <Route path="/tracker" element={<ProtectedRoute><Tracker /></ProtectedRoute>} />
+          <Route path="/intelligence" element={<ProtectedRoute><BidIntelligence /></ProtectedRoute>} />
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       </BrowserRouter>
