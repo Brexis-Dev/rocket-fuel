@@ -52,7 +52,8 @@ Return only the JSON object, no markdown, no explanation.`;
     messages: [{ role: 'user', content: prompt }],
   });
 
-  const raw = message.content[0].text.trim();
+  let raw = message.content[0].text.trim();
+  raw = raw.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/, '').trim();
   let parsed;
   try {
     parsed = JSON.parse(raw);
@@ -114,11 +115,14 @@ Return only the JSON object, no markdown, no explanation.`;
 
   const message = await client.messages.create({
     model: 'claude-sonnet-4-6',
-    max_tokens: 4000,
+    max_tokens: 8000,
     messages: [{ role: 'user', content: prompt }],
   });
 
-  const raw = message.content[0].text.trim();
+  let raw = message.content[0].text.trim();
+  // Strip markdown code fences if present
+  raw = raw.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/, '').trim();
+
   let parsed;
   try {
     parsed = JSON.parse(raw);
