@@ -120,6 +120,8 @@ Return only the JSON object, no markdown, no explanation.`;
   });
 
   let raw = message.content[0].text.trim();
+  console.log('Claude raw response (first 500 chars):', raw.slice(0, 500));
+  console.log('Claude stop_reason:', message.stop_reason);
   // Strip markdown code fences if present
   raw = raw.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/, '').trim();
 
@@ -129,8 +131,14 @@ Return only the JSON object, no markdown, no explanation.`;
   } catch {
     const match = raw.match(/\{[\s\S]*\}/);
     if (match) {
-      parsed = JSON.parse(match[0]);
+      try {
+        parsed = JSON.parse(match[0]);
+      } catch (e2) {
+        console.error('JSON extract also failed. Last 200 chars of raw:', raw.slice(-200));
+        throw new Error('Claude did not return valid JSON for bid normalization');
+      }
     } else {
+      console.error('No JSON object found in response. Full raw:', raw.slice(0, 1000));
       throw new Error('Claude did not return valid JSON for bid normalization');
     }
   }
